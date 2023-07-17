@@ -1,13 +1,20 @@
 const puppeteer = require('puppeteer');
 
-(async () => {
+async function getPageData(url,page){
+    await page.goto(url);
+    const td = await page.$$eval('tableRatio3', td =>
+        td => td.textContent);
+
+    return {
+        title: td
+    }
+};
+
+async function main() {
     const browser = await puppeteer.launch({headless:false});
     const page = await browser.newPage();
-    await page.goto('https://apply.jinhakapply.com/SmartRatio');
+    const data= getPageData('https://apply.jinhakapply.com/SmartRatio');
+    console.log(data);
+}
 
-    const links = await page.$$eval('a.rate', allA =>
-    allA.map(a => a.href));
-
-    console.log(links);
-
-})();
+main();
